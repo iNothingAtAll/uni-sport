@@ -1,4 +1,4 @@
-from api.models import Producto
+from models import Producto
 
 
 class ProductosService:

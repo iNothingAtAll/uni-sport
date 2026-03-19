@@ -1,8 +1,9 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
-from api.config import init_db, close_db_connection
-from api.routes import productos
+from config import init_db, close_db_connection
+from routes import router
 
 
 @asynccontextmanager
@@ -23,4 +24,13 @@ api = FastAPI(
 )
 
 
-api.include_router(productos.router)
+# Configuración de CORS para permitir solicitudes desde el frontend
+api.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://127.0.0.1:3000"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+api.include_router(router)

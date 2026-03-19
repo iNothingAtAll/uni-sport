@@ -1,9 +1,9 @@
 from sqlmodel import Session
 from fastapi import APIRouter, Depends, HTTPException
 
-from api.config import get_session
-from api.models import Producto
-from api.services import ProductosService
+from config import get_session
+from models import Producto
+from services import ProductosService
 
 
 router = APIRouter()
