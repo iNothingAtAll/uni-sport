@@ -5,7 +5,7 @@ import os
 
 
 # Cargar variables de entorno desde el archivo .env en el directorio padre
-load_dotenv(dotenv_path=Path(__file__).parent.parent / '.env')
+load_dotenv(dotenv_path=Path(__file__).parent / '.env')
 
 
 # Se extrae toda la informacion para conectarse a la base de datos
