@@ -1,0 +1,57 @@
+services:
+  # Despliega el servicio de autenticacion de los usuarios
+  api:
+    container_name: api
+    build: ./api/
+    restart: always
+
+    ports:
+      - 8000:8000
+
+    networks:
+      - network-api
+
+
+    # Despliega la base de datos de usuarios
+  db:
+    container_name: db
+    image: mariadb:11.4.8-noble
+    restart: always
+    env_file: ./api/.env
+    volumes:
+      - ./db/:/docker-entrypoint-initdb.d/
+      - users:/var/lib/mysql
+
+    networks:
+      - network-db
+      - network-api
+
+
+  # Despliega el manager para la base de datos
+  phpmyadmin:  
+    container_name: phpmyadmin
+    image: phpmyadmin:5.2.3-apache
+    restart: always
+    env_file: ./api/.env
+
+    depends_on:
+      - db
+
+    ports:
+      - 8080:80
+
+    networks:
+      - network-db
+
+
+# Todas redes que aislan los servicios entre si
+networks:
+  network-api:
+    driver: bridge
+  
+  network-db:
+    driver: bridge
+
+
+volumes:
+  users:
