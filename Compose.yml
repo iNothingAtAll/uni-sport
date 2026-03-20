@@ -12,7 +12,7 @@ services:
       - network-api
 
 
-    # Despliega la base de datos de usuarios
+  # Despliega la base de datos de usuarios
   db:
     container_name: db
     image: mariadb:11.4.8-noble
@@ -42,6 +42,22 @@ services:
 
     networks:
       - network-db
+
+
+  # Sirve el frontend en http://localhost:3000
+  frontend:
+    container_name: frontend
+    image: nginx:alpine
+    restart: always
+
+    volumes:
+      - ./frontend/:/usr/share/nginx/html/
+
+    ports:
+      - 3000:80
+
+    networks:
+      - network-api
 
 
 # Todas redes que aislan los servicios entre si

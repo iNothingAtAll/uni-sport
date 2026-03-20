@@ -1,100 +1,217 @@
-// ── Datos de prueba (se usan si la API no responde) ──────────────────────────
-const MOCK = [
-  { id:1, nombre_producto:"Audífonos Bluetooth Pro",    descripcion:"Cancelación de ruido activa, batería de 30h.", precio:189900, disponible:true  },
-  { id:2, nombre_producto:"Camiseta Básica Algodón",    descripcion:"Unisex 100% algodón, tallas S a XXL.",         precio:35000,  disponible:true  },
-  { id:3, nombre_producto:"Lámpara LED de Escritorio",  descripcion:"Luz regulable y puerto USB de carga.",         precio:75000,  disponible:true  },
-  { id:4, nombre_producto:"Tenis Running Air",          descripcion:"Suela amortiguada para running y gym.",        precio:220000, disponible:true  },
-  { id:5, nombre_producto:"Clean Code - R.C. Martin",   descripcion:"Principios de escritura de código limpio.",    precio:58000,  disponible:false },
-  { id:6, nombre_producto:"Smartwatch Fit X200",        descripcion:"GPS, monitor cardíaco, resistencia IP68.",     precio:350000, disponible:true  },
-];
+const EMOJIS = ["📦","🎧","👕","💡","👟","📚","⌚","🔌","🧥","🍳","⚽","🎮","🖥️","🎒","🕶️"];
 
-const EMOJIS = ["📦","🎧","👕","💡","👟","📚","⌚","🔌","🧥","🍳","⚽"];
-let todosLosProductos = [];
+let todos  = [];
+let carrito = []; // [{ producto, cantidad }]
 
-// ── Utilidades ───────────────────────────────────────────────────────────────
-function formatPrecio(v) {
+// ── Formato ──────────────────────────────────────────────────────────────────
+function fmt(v) {
   return new Intl.NumberFormat('es-CO', {
     style: 'currency', currency: 'COP', maximumFractionDigits: 0
   }).format(v);
 }
 
+// ── Status ───────────────────────────────────────────────────────────────────
 function setStatus(tipo, msg) {
   const el = document.getElementById('status');
-  el.className = `status ${tipo}`;
+  el.className = `status show ${tipo}`;
   el.innerHTML = `<span class="dot"></span><span>${msg}</span>`;
 }
 
-function mostrarSkeletons() {
+function skeletons() {
   document.getElementById('grid').innerHTML =
-    Array(6).fill(`<div class="skel-card"></div>`).join('');
+    Array(6).fill('<div class="skel"></div>').join('');
 }
 
-// ── Render ───────────────────────────────────────────────────────────────────
-function renderProductos(lista) {
-  const grid = document.getElementById('grid');
-  document.getElementById('contador').textContent = `(${lista.length})`;
+// ── Carrito: lógica ──────────────────────────────────────────────────────────
+function agregarAlCarrito(id) {
+  const producto = todos.find(p => p.id === id);
+  if (!producto) return;
 
-  if (!lista.length) {
-    grid.innerHTML = `<div class="empty">No hay productos que mostrar.</div>`;
+  const item = carrito.find(i => i.producto.id === id);
+  if (item) {
+    item.cantidad++;
+  } else {
+    carrito.push({ producto, cantidad: 1 });
+  }
+
+  actualizarCarrito();
+  actualizarBotonesGrid();
+}
+
+function cambiarCantidad(id, delta) {
+  const item = carrito.find(i => i.producto.id === id);
+  if (!item) return;
+
+  item.cantidad += delta;
+  if (item.cantidad <= 0) {
+    carrito = carrito.filter(i => i.producto.id !== id);
+  }
+
+  actualizarCarrito();
+  actualizarBotonesGrid();
+}
+
+function actualizarCarrito() {
+  // Contador del header
+  const total = carrito.reduce((s, i) => s + i.cantidad, 0);
+  document.getElementById('cart-count').textContent = total;
+
+  // Total precio
+  const suma = carrito.reduce((s, i) => s + i.producto.precio * i.cantidad, 0);
+  document.getElementById('total').textContent = fmt(suma);
+
+  // Items del panel
+  const container = document.getElementById('carrito-items');
+
+  if (carrito.length === 0) {
+    container.innerHTML = `
+      <div class="carrito-vacio">
+        <span>🛒</span>
+        <p>Tu carrito está vacío</p>
+      </div>`;
+    document.querySelector('.btn-checkout').disabled = true;
     return;
   }
 
-  grid.innerHTML = lista.map((p, i) => {
-    const emoji = EMOJIS[p.id % EMOJIS.length];
-    return `
-      <div class="card" style="animation-delay:${i * 0.06}s">
-        <div class="card-img">${emoji}</div>
-        <div class="card-body">
-          <span class="badge ${p.disponible ? 'ok' : 'off'}">
-            ${p.disponible ? '✓ Disponible' : '✗ Agotado'}
-          </span>
-          <h3>${p.nombre_producto}</h3>
-          <p>${p.descripcion}</p>
-        </div>
-        <div class="card-footer">
-          <span class="price">${formatPrecio(p.precio)}</span>
-          <button class="btn-add" ${!p.disponible ? 'disabled' : ''}>
-            ${p.disponible ? 'Agregar' : 'Agotado'}
-          </button>
-        </div>
-      </div>`;
-  }).join('');
+  document.querySelector('.btn-checkout').disabled = false;
+
+  container.innerHTML = carrito.map(({ producto: p, cantidad }) => `
+    <div class="c-item">
+      <span class="c-emoji">${EMOJIS[p.id % EMOJIS.length]}</span>
+      <div class="c-info">
+        <h4>${p.nombre_producto}</h4>
+        <p>${fmt(p.precio * cantidad)}</p>
+      </div>
+      <div class="c-qty">
+        <button class="qty-btn" onclick="cambiarCantidad(${p.id}, -1)">−</button>
+        <span class="qty-num">${cantidad}</span>
+        <button class="qty-btn" onclick="cambiarCantidad(${p.id}, +1)">+</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Actualiza el texto del botón en las tarjetas según si ya está en el carrito
+function actualizarBotonesGrid() {
+  todos.forEach(p => {
+    const btn = document.getElementById(`btn-${p.id}`);
+    if (!btn) return;
+    const enCarrito = carrito.some(i => i.producto.id === p.id);
+    btn.textContent = enCarrito ? '✓ Agregado' : 'Agregar';
+    btn.classList.toggle('en-carrito', enCarrito);
+  });
+}
+
+// ── Carrito: panel ───────────────────────────────────────────────────────────
+function toggleCarrito() {
+  document.getElementById('carrito').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+
+function checkout() {
+  alert(`¡Pedido realizado! Total: ${document.getElementById('total').textContent}`);
+  carrito = [];
+  actualizarCarrito();
+  actualizarBotonesGrid();
+  toggleCarrito();
+}
+
+// ── Render catálogo ──────────────────────────────────────────────────────────
+function render(lista) {
+  const grid = document.getElementById('grid');
+
+  if (!lista.length) {
+    grid.innerHTML = '<div class="empty">No hay productos que mostrar.</div>';
+    return;
+  }
+
+  grid.innerHTML = lista.map((p, i) => `
+    <div class="card" style="animation-delay:${i * 0.05}s">
+      <div class="card-thumb">
+        ${EMOJIS[p.id % EMOJIS.length]}
+        <span class="card-id">#${p.id}</span>
+      </div>
+      <div class="card-body">
+        <span class="badge ${p.disponible ? 'ok' : 'off'}">
+          ${p.disponible ? '✓ Disponible' : '✗ Agotado'}
+        </span>
+        <h3>${p.nombre_producto}</h3>
+        <p>${p.descripcion}</p>
+      </div>
+      <div class="card-footer">
+        <span class="price">${fmt(p.precio)}</span>
+        <button
+          id="btn-${p.id}"
+          class="btn-buy"
+          ${!p.disponible ? 'disabled' : `onclick="agregarAlCarrito(${p.id})"`}>
+          ${p.disponible ? 'Agregar' : 'Agotado'}
+        </button>
+      </div>
+    </div>
+  `).join('');
+
+  actualizarBotonesGrid();
 }
 
 // ── Filtros ──────────────────────────────────────────────────────────────────
 function filtrar(tipo, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 
-  const filtrado =
-    tipo === 'disponible' ? todosLosProductos.filter(p =>  p.disponible) :
-    tipo === 'agotado'    ? todosLosProductos.filter(p => !p.disponible) :
-    todosLosProductos;
+  const lista =
+    tipo === 'disponible' ? todos.filter(p =>  p.disponible) :
+    tipo === 'agotado'    ? todos.filter(p => !p.disponible) :
+    todos;
 
-  renderProductos(filtrado);
+  render(lista);
 }
 
-// ── Fetch principal ──────────────────────────────────────────────────────────
-async function cargarProductos() {
-  const url = document.getElementById('apiUrl').value.trim();
-  mostrarSkeletons();
-  setStatus('loading', `Conectando con <strong>${url}</strong>...`);
+// ── Fetch por ID hasta 404 ───────────────────────────────────────────────────
+async function fetchTodos(base) {
+  const productos = [];
+  let id = 1;
 
-  try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    todosLosProductos = Array.isArray(data) ? data : (data.productos ?? data.items ?? []);
-    setStatus('success', `✓ ${todosLosProductos.length} productos cargados desde la API`);
-  } catch (err) {
-    todosLosProductos = MOCK;
-    setStatus('mock',
-      `⚠ No se pudo conectar con la API — mostrando datos de prueba.
-       <small style="opacity:.6">(${err.message})</small>`);
+  while (true) {
+    try {
+      const res = await fetch(`${base}/producto/${id}`, {
+        signal: AbortSignal.timeout(4000)
+      });
+      if (res.status === 404) break;
+      if (!res.ok) break;
+
+      const data = await res.json();
+      productos.push(data);
+      setStatus('loading', `Cargando productos... (${productos.length} encontrados)`);
+      render(productos);
+      id++;
+    } catch {
+      break;
+    }
   }
 
-  renderProductos(todosLosProductos);
+  return productos;
 }
 
-// Arrancar al cargar la página
-cargarProductos();
+// ── Inicio ───────────────────────────────────────────────────────────────────
+async function iniciar() {
+  const base = document.getElementById('apiBase').value.trim().replace(/\/$/, '');
+  skeletons();
+  setStatus('loading', 'Conectando con la API...');
+  todos = [];
+  carrito = [];
+  actualizarCarrito();
+
+  todos = await fetchTodos(base);
+
+  if (todos.length === 0) {
+    setStatus('error', '⚠ La API no devolvió productos. Verifica que la BD tenga datos.');
+  } else {
+    setStatus('ok', `✓ ${todos.length} productos cargados desde la API`);
+  }
+
+  render(todos);
+}
+
+// Inicializar carrito vacío al arrancar
+actualizarCarrito();
+iniciar();
