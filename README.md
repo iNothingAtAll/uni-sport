@@ -11,6 +11,13 @@ Este repositorio contiene una aplicación compuesta por cuatro servicios:
 - **MariaDB**: base de datos relacional.
 - **phpMyAdmin**: interfaz gráfica para administrar MariaDB.
 
+##Ventajas del sistema
+-**Escalabilidad**
+-**Tolerancia a fallos**
+-**Mantenibilidad**
+-**Seguridad por capas**
+-**Despliegue y actualizaciones sin interrupción**
+
 Todos los servicios se orquestan mediante **Docker Compose**.
 
 
