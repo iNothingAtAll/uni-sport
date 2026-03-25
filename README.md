@@ -1,73 +1,60 @@
 # 🛒 UniStore — E-Commerce
 
-Proyecto académico de e-commerce desarrollado con FastAPI, MySQL y HTML/CSS/JS.
+Este es un Diagrama representativo de como están conectados los servicios lanzados con docker y como este interactúa con el usuario.
 
----
+![ ](/imagenes/diagrama.png)
 
-## 🧱 Tecnologías
+Este repositorio contiene una aplicación compuesta por cuatro servicios:
 
-| Capa       | Tecnología          |
-|------------|---------------------|
-| Backend    | Python + FastAPI    |
-| ORM        | SQLModel            |
-| Base de datos | MySQL            |
-| Frontend   | HTML / CSS / JS     |
-| Contenedores | Docker + Docker Compose |
+- **API**: backend con endpoints `/productos` y `/docs`.
+- **Web**: frontend (puede ser una aplicación estática o dinámica).
+- **MariaDB**: base de datos relacional.
+- **phpMyAdmin**: interfaz gráfica para administrar MariaDB.
 
----
+Todos los servicios se orquestan mediante **Docker Compose**.
 
-## 📁 Estructura del proyecto
 
-```
-uni-sport/
-├── backend/
-│   ├── models.py          # Modelos SQLModel
-│   ├── main.py            # Rutas FastAPI
-│   └── ...
-├── frontend/
-│   ├── index.html
-│   ├── style.css
-│   └── script.js
-├── db/
-│   ├── 01_tabla.sql       # Creación de tablas
-│   ├── 02_insert1.sql     # Datos iniciales
-│   └── 03_insert2.sql     # Datos adicionales
-├── docker-compose.yml
-└── Dockerfile
-```
+## Requisitos previos
 
----
+- Docker instalado ([docker.com](https://docker.com))
+- Docker Compose instalado (generalmente incluido en Docker Desktop)
 
-## 🚀 Cómo correr el proyecto
 
-### 1. Clonar el repositorio
+## Configuración
+
+1. **Clona el repositorio**
+   ```bash
+   git clone https://github.com/tu-usuario/tu-repo.git
+   cd tu-repo
+   ```
+
+2. **Levanta los servicios**
+    ```bash
+    docker-compose up -d
+    ```
+3. **Accede a la aplicación**
+
+    - Web: http://localhost:3000
+    - API: http://localhost:8000
+    - phpMyAdmin: http://localhost:8080
+
+> Nota: El usuario y contraseña de phpMyAdmin es `admin`
+
+## Uso de la API
+
+Listado de Endpoints:
+- Obtener producto:  http://localhost:8000/producto/\<id\>
+- Info de los endpoint: http://localhost:8000/docs
+
+
+## Detener y eliminar contenedores
 
 ```bash
-git clone <url-del-repo>
-cd uni-sport
+docker-compose down
 ```
 
-### 2. Levantar los servicios con Docker
+## Para eliminar también los volúmenes
 
 ```bash
-docker compose up
+docker-compose down -v
 ```
-
-Esto levanta el backend (FastAPI) y la base de datos (MySQL).
-
-### 3. Verificar que la API esté corriendo
-
-Abre en el navegador:
-
-```
-http://localhost:8000/docs
-```
-
-## 📌 Endpoints principales
-
-| Método | Endpoint       | Descripción              |
-|--------|----------------|--------------------------|
-| GET    | `/productos`   | Listar todos los productos |
-| GET    | `/docs`        | Documentación automática |
-
----
