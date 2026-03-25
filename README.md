@@ -43,7 +43,7 @@ Todos los servicios se orquestan mediante **Docker Compose**.
 ## Uso de la API
 
 Listado de Endpoints:
-- Obtener producto:  http://localhost:8000/producto/\<id\>
+- Obtener producto:  http://localhost:8000/producto/<id\>
 - Info de los endpoint: http://localhost:8000/docs
 
 
