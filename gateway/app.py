@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import mysql.connector
 import requests
 
@@ -55,6 +55,15 @@ def get_transaccion(transaccion_id):
 def get_transacciones_usuario(usuario_id):
     usuarios = requests.get(f"http://api-transacciones:5001/transacciones/usuario/{usuario_id}").json()
     return jsonify(usuarios)
+
+
+@app.route("/usuario/auth", methods=["POST"])
+def auth():
+    data = request.get_json()
+    if data is None:
+        return jsonify({"error": "Invalid JSON"}), 400
+    resp = requests.post("http://api-usuarios:5002/auth", json=data)
+    return jsonify(resp.json())
 
 
 if __name__ == "__main__":
