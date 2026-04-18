@@ -63,7 +63,7 @@ def get_transaccion(transaccion_id):
 
 
 @app.route("/transacciones/usuario/<int:usuario_id>")
-def get_transaccion_usuario(usuario_id):
+def get_transacciones_usuario(usuario_id):
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute(f"""

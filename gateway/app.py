@@ -45,9 +45,9 @@ def get_transacciones():
     return jsonify(usuarios)
 
 
-@app.route("/transaccione/<int:transaccion_id>")
+@app.route("/transaccion/<int:transaccion_id>")
 def get_transaccion(transaccion_id):
-    usuarios = requests.get(f"http://api-transacciones:5001/transaccione/{transaccion_id}").json()
+    usuarios = requests.get(f"http://api-transacciones:5001/transaccion/{transaccion_id}").json()
     return jsonify(usuarios)
 
 
