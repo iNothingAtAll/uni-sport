@@ -22,6 +22,7 @@ def info():
             "http://localhost:5001/",
             "http://localhost:5001/transacciones",
             "http://localhost:5001/transaccion/<int:transaccion_id>",
+            "http://localhost:5001/transacciones/usuario/<int:usuario_id>",
         ]
     })
 
@@ -67,7 +68,6 @@ def get_transaccion_usuario(usuario_id):
     cursor = conn.cursor()
     cursor.execute(f"""
         SELECT 
-            id_usuario, 
             monto, 
             tipo, 
             descripcion 
