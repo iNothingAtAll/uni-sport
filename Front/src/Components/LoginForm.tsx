@@ -44,7 +44,16 @@ function LoginForm() {
                 </button>
 
             </form>
-
+            {/* Enlace a Registro */}
+            <p style={{ color: "#aaa", fontSize: "14px", marginTop: "16px" }}>
+                ¿No tienes cuenta?{" "}
+                <span
+                    onClick={() => window.location.href = "/Registro"}
+                    style={{ color: "#f5b700", cursor: "pointer", fontWeight: "bold" }}
+                >
+                    Regístrate
+                </span>
+            </p>
         </div>
 
     )
