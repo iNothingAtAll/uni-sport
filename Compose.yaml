@@ -7,8 +7,6 @@ services:
     restart: always
     ports:
       - 5000:5000
-    volumes:
-      - ./gateway/:/home/app/
     depends_on:
       - api-transacciones
       - api-usuarios
@@ -20,12 +18,8 @@ services:
     container_name: api-transacciones
     build: ./api-transacciones/
     restart: always
-    ports:
-      - 5001:5001
     depends_on:
       - db
-    volumes:
-      - ./api-transacciones/:/home/app/
     networks:
       - api-network
       - gateway-network
@@ -35,10 +29,6 @@ services:
     container_name: api-usuarios
     build: ./api-usuarios/
     restart: always
-    ports:
-      - 5002:5002
-    volumes:
-      - ./api-usuarios/:/home/app/
     depends_on:
       - db
     networks:

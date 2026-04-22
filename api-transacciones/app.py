@@ -22,6 +22,7 @@ def info():
             "http://localhost:5001/",
             "http://localhost:5001/transacciones",
             "http://localhost:5001/transaccion/<int:transaccion_id>",
+            "http://localhost:5001/transacciones/usuario/<int:usuario_id>",
         ]
     })
 
@@ -62,12 +63,11 @@ def get_transaccion(transaccion_id):
 
 
 @app.route("/transacciones/usuario/<int:usuario_id>")
-def get_transaccion_usuario(usuario_id):
+def get_transacciones_usuario(usuario_id):
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute(f"""
         SELECT 
-            id_usuario, 
             monto, 
             tipo, 
             descripcion 

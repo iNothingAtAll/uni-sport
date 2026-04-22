@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import mysql.connector
 
 
@@ -62,6 +62,44 @@ def get_usuario(usuario_id):
     conn.close()
     return usuario
 
+
+@app.route("/auth", methods=["POST"])
+def auth():
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Se requiere datos JSON"}), 400
+    
+    nickname = data.get("nickname")
+    password_hash = data.get("password_hash")
+    
+    if not nickname or not password_hash:
+        return jsonify({"error": "Faltan campos: 'nickname' y 'password_hash' son requeridos"}), 400
+    
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    cursor.execute(f"""
+        SELECT id, nombre, nickname, correo, telefono, saldo, password_hash
+        FROM usuarios
+        WHERE nickname = '{nickname}'
+    """)
+    
+    usuario = cursor.fetchone()
+    conn.close()
+    
+    if not usuario:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+    
+    if usuario["password_hash"] != password_hash:
+        return jsonify({"error": "Contraseña incorrecta"}), 401
+    
+    usuario.pop("password_hash", None) 
+
+    return jsonify({
+        "mensaje": "Autenticación exitosa",
+        "usuario": usuario
+    }), 200
+    
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5002)
