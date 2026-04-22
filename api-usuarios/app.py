@@ -19,9 +19,10 @@ def get_connection():
 def info():
     return jsonify({
         "endpont": [
-            "http://localhost:5002",
-            "http://localhost:5002/usuarios",
-            "http://localhost:5002/usuario/<int:usuario_id>",
+            "/usuarios",
+            "/usuario/<int:usuario_id>",
+            "/auth",
+            "/registro",
         ]
     })
 
