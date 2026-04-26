@@ -65,6 +65,13 @@ def auth():
     resp = requests.post("http://api-usuarios:5002/auth", json=data)
     return jsonify(resp.json())
 
+@app.route("/registro", methods=["POST"])
+def registro():
+    data = request.get_json()
+    if data is None:
+        return jsonify({"error": "Invalid JSON"}), 400
+    resp = requests.post("http://api-usuarios:5002/registro", json=data)
+    return jsonify(resp.json())
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
