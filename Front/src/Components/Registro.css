@@ -45,3 +45,21 @@
     font-size: 11px;
     margin: -4px 0 4px 0;
 }
+
+.register-link {
+    color: #aaa;
+    font-size: 14px;
+    margin-top: 16px;
+}
+
+.register-link span {
+    color: #f5b700;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.logo {
+    width: 100px;
+    margin-bottom: 16px;
+    border-radius: 48%;
+}
