@@ -1,23 +1,34 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import logo from "../assets/sin fondo.jpeg"
+import { login } from "../Services/AuthService"
 
 function LoginForm() {
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    const navigate = useNavigate()
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
-        if (username === "admin" && password === "1234") {
+        try {
+            const data = await login(username, password)
+
             alert("Login correcto")
-        } else {
-            alert("Credenciales incorrectas")
+            
+            console.log(data)
+
+            // guardar usuario
+            localStorage.setItem("usuario", JSON.stringify(data.usuario))
+            navigate("/profile")
+
+        } catch (error: any) {
+            alert(error.message)
         }
     }
 
     return (
-
         <div className="login-container">
 
             <h2>UniSport</h2>
@@ -44,7 +55,7 @@ function LoginForm() {
                 </button>
 
             </form>
-            {/* Enlace a Registro */}
+
             <p style={{ color: "#aaa", fontSize: "14px", marginTop: "16px" }}>
                 ¿No tienes cuenta?{" "}
                 <span
@@ -54,8 +65,8 @@ function LoginForm() {
                     Regístrate
                 </span>
             </p>
-        </div>
 
+        </div>
     )
 }
 
