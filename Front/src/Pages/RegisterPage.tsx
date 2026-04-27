@@ -1,8 +1,9 @@
 import RegisterForm from "../Components/RegisterForm"
+import "./Registro.css"
 
 function RegisterPage() {
     return (
-        <div className="login-page">
+        <div className="register-page">
             <RegisterForm />
         </div>
     )
