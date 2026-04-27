@@ -19,10 +19,9 @@ def get_connection():
 def info():
     return jsonify({
         "endpont": [
-            "http://localhost:5001/",
-            "http://localhost:5001/transacciones",
-            "http://localhost:5001/transaccion/<int:transaccion_id>",
-            "http://localhost:5001/transacciones/usuario/<int:usuario_id>",
+            "/transacciones",
+            "/transaccion/<int:transaccion_id>",
+            "/transacciones/usuario/<int:usuario_id>",
         ]
     })
 
