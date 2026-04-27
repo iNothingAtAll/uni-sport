@@ -1,0 +1,47 @@
+.register-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #0f3d2e;
+}
+
+.register-container {
+    background: #1c1c1c;
+    padding: 40px;
+    border-radius: 10px;
+    width: 320px;
+    text-align: center;
+}
+
+.register-container h2 {
+    color: #ffffff;
+    font-size: 24px;
+    font-family: auto;
+    margin-bottom: 4px;
+}
+
+.register-container img {
+    width: 100px;
+    margin-bottom: 16px;
+    border-radius: 48%;
+}
+
+.register-label {
+    display: block;
+    text-align: left;
+    color: #9ab8a4;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 6px 0 2px 0;
+}
+
+.register-error {
+    display: block;
+    text-align: left;
+    color: #f44336;
+    font-size: 11px;
+    margin: -4px 0 4px 0;
+}
