@@ -1,5 +1,6 @@
 import { useState } from "react"
 import logo from "../assets/sin fondo.jpeg"
+import "./Registro.css"
 
 function RegisterForm() {
 
@@ -52,14 +53,12 @@ function RegisterForm() {
     }
 
     return (
-        <div className="login-container">
+        <div className="register-container">
 
             <img src={logo} alt="UniSport Logo" className="logo" />
-            <h2 style={{ fontSize: "24px", marginBottom: "4px" }}>
-                Registro de Nuevo Usuario
-            </h2>
+            <h2>Registro de Nuevo Usuario</h2>
 
-            <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+            <form onSubmit={handleSubmit}>
 
                 <label className="register-label">Nombres</label>
                 <input
@@ -131,18 +130,15 @@ function RegisterForm() {
                 />
                 {errors.confirmarPassword && <span className="register-error">{errors.confirmarPassword}</span>}
 
-                <button type="submit" style={{ marginTop: "12px" }}>
+                <button type="submit">
                     Crear Cuenta
                 </button>
 
             </form>
 
-            <p style={{ color: "#aaa", fontSize: "14px", marginTop: "16px" }}>
+            <p className="register-link">
                 ¿Ya tienes cuenta?{" "}
-                <span
-                    onClick={() => window.location.href = "/"}
-                    style={{ color: "#f5b700", cursor: "pointer", fontWeight: "bold" }}
-                >
+                <span onClick={() => window.location.href = "/"}>
                     Inicia sesión
                 </span>
             </p>
