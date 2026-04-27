@@ -110,26 +110,41 @@ def get_transacciones_usuario(usuario_id):
 
 @app.route("/usuario/auth", methods=["POST"])
 def auth():
-    data = request.get_json()
-    if data is None:
-        return jsonify({"error": "Invalid JSON"}), 400
+    try:
+        data = request.get_json()
+        if data is None:
+            return jsonify({"error": "Invalid JSON"},400) 
+        resp = requests.post("http://api-usuarios:5002/auth", json=data, timeout=5)
+        return jsonify(resp.json())
+    except requests.exceptions.ConnectionError:
+        print("Error de conexión con api-usuarios", flush=True)
+        return jsonify({"error": "Servicio no disponible"}, 503)
+    except requests.exceptions.Timeout:
+        print("Tiempo de espera agotado para api-usuarios", flush=True)
+        return jsonify({"error": "Tiempo de espera agotado"}, 503)
 
-    resp = requests.post("http://api-usuarios:5002/auth", json=data)
-
-    return jsonify(resp.json()), resp.status_code
 
 @app.route("/modules")
 def modules():
     resp = requests.get("http://api-modules:5003/modules")
     return jsonify(resp.json()), resp.status_code
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
 
 @app.route("/registro", methods=["POST"])
 def registro():
-    data = request.get_json()
-    if data is None:
-        return jsonify({"error": "Invalid JSON"}), 400
-    resp = requests.post("http://api-usuarios:5002/registro", json=data)
-    return jsonify(resp.json())
+    try:
+        data = request.get_json()
+        if data is None:
+            return jsonify({"error": "Invalid JSON"}), 400
+        resp = requests.post("http://api-usuarios:5002/registro", json=data, timeout=5)
+        return jsonify(resp.json())
+    except requests.exceptions.ConnectionError:
+        print("Error de conexión con api-usuarios", flush=True)
+        return jsonify({"error":"Servicio no disponible"}, 503)
+    except requests.exceptions.Timeout:
+        print("Tiempo de espera agotado para api-usuarios", flush=True)
+        return jsonify({"error": "Tiempo de espera agotado"}, 503)
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
