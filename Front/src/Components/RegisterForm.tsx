@@ -78,46 +78,65 @@ function RegisterForm() {
             <h2>Registro de Nuevo Usuario</h2>
 
             <form onSubmit={handleSubmit}>
+                <div className="register-grid">
 
-                <label className="register-label">Nombres</label>
-                <input type="text" name="nombres" placeholder="Nombres"
-                    value={form.nombres} onChange={handleChange} />
-                {errors.nombres && <span className="register-error">{errors.nombres}</span>}
+                    <div className="register-field">
+                        <label className="register-label">Nombres</label>
+                        <input type="text" name="nombres" placeholder="Nombres"
+                            value={form.nombres} onChange={handleChange} />
+                        {errors.nombres && <span className="register-error">{errors.nombres}</span>}
+                    </div>
 
-                <label className="register-label">Apellidos</label>
-                <input type="text" name="apellidos" placeholder="Apellidos"
-                    value={form.apellidos} onChange={handleChange} />
-                {errors.apellidos && <span className="register-error">{errors.apellidos}</span>}
+                    <div className="register-field">
+                        <label className="register-label">Apellidos</label>
+                        <input type="text" name="apellidos" placeholder="Apellidos"
+                            value={form.apellidos} onChange={handleChange} />
+                        {errors.apellidos && <span className="register-error">{errors.apellidos}</span>}
+                    </div>
 
-                <label className="register-label">Número de Identificación</label>
-                <input type="text" name="identificacion" placeholder="Número de Identificación"
-                    value={form.identificacion} onChange={handleChange} />
-                {errors.identificacion && <span className="register-error">{errors.identificacion}</span>}
+                    <div className="register-field">
+                        <label className="register-label">Número de Identificación</label>
+                        <input type="text" name="identificacion" placeholder="Número de Identificación"
+                            value={form.identificacion} onChange={handleChange} />
+                        {errors.identificacion && <span className="register-error">{errors.identificacion}</span>}
+                    </div>
 
-                <label className="register-label">Correo Electrónico</label>
-                <input type="email" name="correo" placeholder="Correo Electrónico"
-                    value={form.correo} onChange={handleChange} />
-                {errors.correo && <span className="register-error">{errors.correo}</span>}
+                    <div className="register-field">
+                        <label className="register-label">Teléfono</label>
+                        <input type="text" name="telefono" placeholder="Teléfono"
+                            value={form.telefono} onChange={handleChange} />
+                        {errors.telefono && <span className="register-error">{errors.telefono}</span>}
+                    </div>
 
-                <label className="register-label">Confirmar Correo</label>
-                <input type="email" name="confirmarCorreo" placeholder="Confirmar Correo"
-                    value={form.confirmarCorreo} onChange={handleChange} />
-                {errors.confirmarCorreo && <span className="register-error">{errors.confirmarCorreo}</span>}
+                    <div className="register-field">
+                        <label className="register-label">Correo Electrónico</label>
+                        <input type="email" name="correo" placeholder="Correo Electrónico"
+                            value={form.correo} onChange={handleChange} />
+                        {errors.correo && <span className="register-error">{errors.correo}</span>}
+                    </div>
 
-                <label className="register-label">Teléfono</label>
-                <input type="text" name="telefono" placeholder="Teléfono"
-                    value={form.telefono} onChange={handleChange} />
-                {errors.telefono && <span className="register-error">{errors.telefono}</span>}
+                    <div className="register-field">
+                        <label className="register-label">Confirmar Correo</label>
+                        <input type="email" name="confirmarCorreo" placeholder="Confirmar Correo"
+                            value={form.confirmarCorreo} onChange={handleChange} />
+                        {errors.confirmarCorreo && <span className="register-error">{errors.confirmarCorreo}</span>}
+                    </div>
 
-                <label className="register-label">Contraseña</label>
-                <input type="password" name="password" placeholder="Contraseña"
-                    value={form.password} onChange={handleChange} />
-                {errors.password && <span className="register-error">{errors.password}</span>}
+                    <div className="register-field">
+                        <label className="register-label">Contraseña</label>
+                        <input type="password" name="password" placeholder="Contraseña"
+                            value={form.password} onChange={handleChange} />
+                        {errors.password && <span className="register-error">{errors.password}</span>}
+                    </div>
 
-                <label className="register-label">Confirmar Contraseña</label>
-                <input type="password" name="confirmarPassword" placeholder="Confirmar Contraseña"
-                    value={form.confirmarPassword} onChange={handleChange} />
-                {errors.confirmarPassword && <span className="register-error">{errors.confirmarPassword}</span>}
+                    <div className="register-field">
+                        <label className="register-label">Confirmar Contraseña</label>
+                        <input type="password" name="confirmarPassword" placeholder="Confirmar Contraseña"
+                            value={form.confirmarPassword} onChange={handleChange} />
+                        {errors.confirmarPassword && <span className="register-error">{errors.confirmarPassword}</span>}
+                    </div>
+
+                </div>
 
                 <button type="submit">Crear Cuenta</button>
 
