@@ -1,9 +1,10 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS 
 import mysql.connector
 
 
 app = Flask(__name__)
-
+CORS(app)
 
 def get_connection():
     return mysql.connector.connect(
@@ -19,9 +20,10 @@ def get_connection():
 def info():
     return jsonify({
         "endpont": [
-            "http://localhost:5002",
-            "http://localhost:5002/usuarios",
-            "http://localhost:5002/usuario/<int:usuario_id>",
+            "/usuarios",
+            "/usuario/<int:usuario_id>",
+            "/auth",
+            "/registro",
         ]
     })
 
@@ -99,7 +101,49 @@ def auth():
         "mensaje": "Autenticación exitosa",
         "usuario": usuario
     }), 200
+
+
+@app.route("/registro", methods=["POST"])
+def registro():
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Se requiere datos JSON"}), 400
     
+    nombre = data.get("nombre")
+    nickname = data.get("nickname")
+    correo = data.get("correo")
+    telefono = data.get("telefono")
+    password_hash = data.get("password_hash")
+    identificacion = data.get("identificacion")
+
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    cursor.execute(f"""
+        SELECT id, nombre, nickname, correo, telefono, saldo, password_hash
+        FROM usuarios
+        WHERE identificacion = '{identificacion}'
+    """)
+    usuario = cursor.fetchone()
+    conn.close()
+
+    
+    if usuario:
+        return jsonify({"error": "Usuario ya existe"}), 404
+
+    if not all([nombre, nickname, correo, telefono, password_hash, identificacion]):
+        return jsonify({"error": "Faltan campos: 'nombre', 'nickname', 'correo', identificacion, 'telefono' y 'password_hash' son requeridos"}), 400
+    
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(f"""
+        INSERT INTO usuarios (nombre, nickname, correo, telefono, password_hash, identificacion)
+        VALUES ('{nombre}', '{nickname}', '{correo}', '{telefono}', '{password_hash}', '{identificacion}')
+    """)
+    conn.commit()
+    conn.close()
+    return jsonify({"mensaje": "Usuario registrado exitosamente"}), 201
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5002)
